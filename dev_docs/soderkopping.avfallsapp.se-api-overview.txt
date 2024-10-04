@@ -1,0 +1,1255 @@
+{
+    "namespace": "nova/v1",
+    "routes": {
+        "/nova/v1": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": {
+                        "namespace": {
+                            "default": "nova/v1",
+                            "required": false
+                        },
+                        "context": {
+                            "default": "view",
+                            "required": false
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/customer-service/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/customer-service/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/customer-service/opening-hours": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/customer-service/opening-hours"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/start/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/start/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/start/blocks": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/start/blocks"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/start-image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/start-image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/register": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/register"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/settings": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET",
+                "POST"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/settings"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/settings2": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/settings2"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/unread": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET",
+                "DELETE",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/unread"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/faq": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/faq"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/faq/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/faq/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/menu": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/menu"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/list": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/list"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/fetch": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/fetch"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/set-status": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/set-status"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/deviating-days": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/deviating-days"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/search": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/search"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/search-flat": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/search-flat"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/remove-address": {
+            "namespace": "nova/v1",
+            "methods": [
+                "DELETE"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/remove-address"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/order": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/order"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/next-pickup/notification/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/news": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/news"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/news/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/news/custom/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/news/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/news/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-centrals/opening-hours": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-centrals/opening-hours"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-centrals/page": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-centrals/page"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-stations": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-stations"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-stations/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-stations/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-stations/pickups/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/recycle-stations/error-reports/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/recycle-stations/error-report": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-stations/error-report"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/recycle-stations/notification/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/sludge-suction/list": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/list"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/set-status": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/set-status"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/search": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/search"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/search-flat": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/search-flat"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/remove-address": {
+            "namespace": "nova/v1",
+            "methods": [
+                "DELETE"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/remove-address"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/order": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/order"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sludge-suction/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sludge-suction/notification/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/paper-bag": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/paper-bag"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sorting-guide": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sorting-guide"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/sorting-guide/categories": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/sorting-guide/categories"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/status": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET",
+                "POST"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "POST"
+                    ],
+                    "args": {
+                        "nova_id": {
+                            "description": "Unik identifierare för objektet.",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "ums_identifier": {
+                            "description": "Unik identifierare för objektet.",
+                            "type": "string",
+                            "required": false
+                        },
+                        "date": {
+                            "description": "Datum för när objektet togs emot från UMS",
+                            "type": "string",
+                            "format": "date-time",
+                            "required": false
+                        },
+                        "sent": {
+                            "description": "Datum för när objektet skickades från UMS",
+                            "type": "string",
+                            "format": "date-time",
+                            "required": false
+                        },
+                        "current": {
+                            "description": "Om objektet är aktuellt eller inte",
+                            "type": "integer",
+                            "required": false
+                        },
+                        "channel": {
+                            "description": "Den kanal som objektet skickades till",
+                            "type": "string",
+                            "required": false
+                        },
+                        "category": {
+                            "description": "Kategori för objektet",
+                            "type": "string",
+                            "required": false
+                        },
+                        "status": {
+                            "description": "Objektets status",
+                            "type": "string",
+                            "required": false
+                        },
+                        "headline": {
+                            "description": "Rubrik för objektet",
+                            "type": "string",
+                            "required": false
+                        },
+                        "description": {
+                            "description": "En beskrivning av objektet",
+                            "type": "string",
+                            "required": false
+                        },
+                        "xml": {
+                            "description": "Det fullständiga UMS-xml-meddelandet",
+                            "type": "string",
+                            "required": false
+                        }
+                    }
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/status"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/status/(?P<id>[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/status/types/(?P<type>\\w+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/status/types/post/(?P<post_id>w?[\\d]+)": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET",
+                "DELETE"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                },
+                {
+                    "methods": [
+                        "DELETE"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/status/types/post/(?P<post_id>w?[\\d]+)/types": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ]
+        },
+        "/nova/v1/status/image": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/status/image"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/water-reporting/list": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/water-reporting/list"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/water-reporting/export": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/water-reporting/export"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/water-reporting/export/csv": {
+            "namespace": "nova/v1",
+            "methods": [
+                "GET"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "GET"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/water-reporting/export/csv"
+                    }
+                ]
+            }
+        },
+        "/nova/v1/water-reporting/report": {
+            "namespace": "nova/v1",
+            "methods": [
+                "POST",
+                "PUT",
+                "PATCH"
+            ],
+            "endpoints": [
+                {
+                    "methods": [
+                        "POST",
+                        "PUT",
+                        "PATCH"
+                    ],
+                    "args": []
+                }
+            ],
+            "_links": {
+                "self": [
+                    {
+                        "href": "https://soderkoping.avfallsapp.se/wp-json/nova/v1/water-reporting/report"
+                    }
+                ]
+            }
+        }
+    },
+    "_links": {
+        "up": [
+            {
+                "href": "https://soderkoping.avfallsapp.se/wp-json/"
+            }
+        ]
+    }
+}
