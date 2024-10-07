@@ -165,7 +165,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
                         else:
                             self._rss[rs.get_rs_id()].update_state(rs)
                             _LOGGER.debug(
-                                "Updating existing Recycle Station entry %s,
+                                "Updating existing Recycle Station entry %s",
                                 self._rss[rs.get_rs_id()].get_full_name(),
                                 # self._rss[rs.get_rs_id()].get_next_pickup(),
                             )
