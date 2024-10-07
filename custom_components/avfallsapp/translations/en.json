@@ -5,7 +5,7 @@
                 "description": "Setup a Avfallsapp instance",
                 "data": {
                     "name": "Name of planner",
-                    "url": "URL to server (likely https://<city>.avfallsapp.se)",
+                    "url": "URL to server (likely <city>.avfallsapp.se)",
                     "api_key": "API Key (copy from phone app)"
                 }
             }
