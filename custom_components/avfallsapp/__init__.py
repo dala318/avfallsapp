@@ -14,13 +14,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-# from homeassistant.helpers.event import async_track_state_change_event
-# from homeassistant.util import dt as dt_util
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-# PLATFORMS = []
 PLATFORMS = [Platform.SENSOR]
 
 
@@ -65,6 +62,8 @@ async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
 class AvfallsappCoordinator(DataUpdateCoordinator):
     """API base class."""
 
+    _bins = {}
+
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize my coordinator."""
         super().__init__(
@@ -78,12 +77,16 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             always_update=True,
         )
         self._hass = hass
-        self_bins = []
 
     # @property
     # def name(self) -> str:
     #     """Name of instance."""
     #     return self._config.data["name"]
+
+    @property
+    def bins(self) -> dict[str, Bin]:
+        """Name of instance."""
+        return self._bins
 
     def get_device_info(self) -> DeviceInfo:
         """Get device info to group entities."""
@@ -95,6 +98,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
         )
 
     def get_next_pickup(self):
+        """Get next pickup date."""
         url = (
             self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/next-pickup/list?"
         )
@@ -124,32 +128,54 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
                 data = response.json()
                 _LOGGER.debug(response.text)
                 _LOGGER.debug(data)
-                # TODO: Store data for entities to read
-                entries = []
                 for entry in data:
                     address = entry.get("address")
                     # plant_id = entry.get("plant_id")
                     for bin in entry.get("bins"):
-                        # icon = ICON_RECYCLE
                         waste_type = bin.get("type")
-                        waste_type_full = f"{address} {waste_type}"
                         pickup_date = bin.get("pickup_date")
                         pickup_date = datetime.strptime(pickup_date, "%Y-%m-%d").date()
                         if waste_type and pickup_date:
-                            _LOGGER.debug(
-                                "Adding entry for %s with next pickup %s",
-                                waste_type_full,
-                                pickup_date.strftime("%Y-%m-%d"),
-                            )
-                            # entries.append(
-                            #     Collection(
-                            #         date=pickup_date, t=waste_type_full, icon=icon
-                            #     )
-                            # )
-
+                            bin = Bin(waste_type, address, pickup_date)
+                            if bin.get_identity() not in self._bins:
+                                _LOGGER.debug(
+                                    "Adding entry for %s at %s with next pickup %s",
+                                    waste_type,
+                                    address,
+                                    pickup_date.strftime("%Y-%m-%d"),
+                                )
+                                self._bins[bin.get_identity()] = bin
+                            else:
+                                self._bins[bin.get_identity()].set_next_pickup(
+                                    pickup_date
+                                )
         except Exception as err:
             pass
             # raise UpdateFailed(f"Unknown error communicating with API: {err}") from err
+
+
+class Bin:
+    """Bin specific class."""
+
+    def __init__(
+        self, waste_type: str, address: str, next_pickup: datetime.date
+    ) -> None:
+        """Initialize my coordinator."""
+        self._waste_type = waste_type
+        self._address = address
+        self._next_pickup = next_pickup
+
+    def get_identity(self):
+        """Get unique identity of bin."""
+        return self._address + " - " + self._waste_type
+
+    def get_next_pickup(self) -> datetime.date:
+        """Get next pickup date of bin."""
+        return self._next_pickup
+
+    def set_next_pickup(self, next_pickup: datetime.date):
+        """Set next pickup date of bin."""
+        self._next_pickup = next_pickup
 
 
 # class AvfallsappEntity(Entity):

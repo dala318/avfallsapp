@@ -1,17 +1,15 @@
-"""Sensor integration for Avfallsapp"""
+"""Sensor integration for Avfallsapp."""
 
 from __future__ import annotations
+
 import logging
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.sensor.const import SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import DOMAIN, AvfallsappCoordinator
-# from .lib import avfallsapp
+from . import DOMAIN, AvfallsappCoordinator, Bin
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,69 +19,36 @@ ICON_RECYCLE = "mdi:recycle"
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities
 ):
-    """Setup sensor platform for the ui"""
-    api_coordinator = hass.data[DOMAIN][config_entry.entry_id]
-    # for a in api_coordinator.data.Accounts:
-    #     params = list(set([m.parameter for m in a.Measurements]))
-    #     _LOGGER.debug(
-    #         "Account: id: %s, Name %s, parameters %s", a.id, a.full_name, params
-    #     )
-    #     sorted_meas = sorted(a.Measurements, key=lambda x: x.timestamp, reverse=True)
-    #     param_added = []
-    #     for m in sorted_meas:
-    #         if m.parameter not in param_added:
-    #             _LOGGER.debug(
-    #                 "Meas: id %s, date %s, parameter %s, scneario %s, value %s, unit %s",
-    #                 m.id,
-    #                 m.timestamp,
-    #                 m.parameter,
-    #                 m.scenario,
-    #                 m.value,
-    #                 m.unit,
-    #             )
-    #             param_added.append(m.parameter)
-    #             async_add_entities([MeasurementSensor(api_coordinator, a, m)])
-
-    async_add_entities([MeasurementSensor(api_coordinator, config_entry.entry_id)])
-    return True
+    """Sensor setup for the platform."""
+    api_coordinator: AvfallsappCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    entities = []
+    for b in api_coordinator.bins.values():
+        _LOGGER.debug("Creating Bin sensor for %s", b.get_identity())
+        entities.append(MeasurementSensor(api_coordinator, b))
+    if entities:
+        async_add_entities(entities)
+        return True
+    return False
 
 
 class MeasurementSensor(CoordinatorEntity, SensorEntity):
-    """Base class for avfallsapp sensor"""
+    """Base class for avfallsapp sensor."""
 
     def __init__(
         self,
         coordinator: AvfallsappCoordinator,
-        # account: avfallsapp.Account,
-        # meas: avfallsapp.Measurement,
-        idx,
+        bin: Bin,
     ) -> None:
-        super().__init__(coordinator, idx)
-        # self._account = account
-        # self._latest_measurement = meas
-        self._latest_measurement = None
+        super().__init__(coordinator, bin.get_identity())
+        self._bin = bin
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        try:
-            self._latest_measurement = self.coordinator.data.get_measurement(
-                self._account.id, self._latest_measurement.parameter
-            )
-            self.async_write_ha_state()
-        except StopIteration:
-            pass
-            # _LOGGER.error(
-            #     "Could not find a measurement matching id:%s and parameter:%s",
-            #     self._account.id,
-            #     self._latest_measurement.parameter,
-            # )
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        # self._attr_native_value = self.coordinator.data[self.idx]["state"]
-        self._attr_native_value = 4
+        for i, b in self.coordinator.bins.items():
+            if i == self._bin.get_identity():
+                self._attr_native_value = b.get_next_pickup()
+                break
         self.async_write_ha_state()
 
     # @property
