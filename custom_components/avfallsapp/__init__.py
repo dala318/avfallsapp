@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio.timeouts
 from datetime import datetime, timedelta
 import logging
 
-import async_timeout
 import requests
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
@@ -70,10 +70,8 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             hass,
             _LOGGER,
             name=config_entry.data.get(CONF_NAME),
-            # update_interval=timedelta(hours=1),
             update_interval=timedelta(seconds=20),
             update_method=self._async_update_data,
-            # update_method=self._update_data,
             always_update=True,
         )
         self._hass = hass
@@ -97,7 +95,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             entry_type=DeviceEntryType.SERVICE,
         )
 
-    def get_next_pickup(self):
+    def get_next_pickup_dict(self):
         """Get next pickup date."""
         url = (
             self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/next-pickup/list?"
@@ -112,80 +110,96 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update call function."""
         _LOGGER.debug("Updating service")
-        # https://community.home-assistant.io/t/garbage-sensor-from-api-json-help/155379/4
-        # https://soderkoping.avfallsapp.se/wp-json/nova/v1/
-        # https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-stations?
-        # https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/list?
-        # https://developers.home-assistant.io/docs/api/rest/
-
         try:
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
-            async with async_timeout.timeout(10):
+            async with asyncio.timeouts.timeout(10):
                 # Grab active context variables to limit data required to be fetched from API
-                response = await self._hass.async_add_executor_job(self.get_next_pickup)
+                response = await self._hass.async_add_executor_job(
+                    self.get_next_pickup_dict
+                )
                 response.raise_for_status()
                 data = response.json()
-                _LOGGER.debug(response.text)
+                # _LOGGER.debug(response.text)
                 _LOGGER.debug(data)
                 for entry in data:
-                    address = entry.get("address")
-                    # plant_id = entry.get("plant_id")
-                    for bin in entry.get("bins"):
-                        waste_type = bin.get("type")
-                        pickup_date = bin.get("pickup_date")
-                        pickup_date = datetime.strptime(pickup_date, "%Y-%m-%d").date()
-                        if waste_type and pickup_date:
-                            bin = Bin(waste_type, address, pickup_date)
-                            if bin.get_identity() not in self._bins:
+                    for b in entry.get("bins"):
+                        bin = Bin(b)
+                        if bin.is_valid():
+                            if bin.get_bin_id() not in self._bins:
                                 _LOGGER.debug(
-                                    "Adding entry for %s at %s with next pickup %s",
-                                    waste_type,
-                                    address,
-                                    pickup_date.strftime("%Y-%m-%d"),
+                                    "Adding Bin entry for %s with next pickup %s",
+                                    bin.get_full_name(),
+                                    bin.get_next_pickup().strftime("%Y-%m-%d"),
                                 )
-                                self._bins[bin.get_identity()] = bin
+                                self._bins[bin.get_bin_id()] = bin
                             else:
-                                self._bins[bin.get_identity()].set_next_pickup(
-                                    pickup_date
+                                self._bins[bin.get_bin_id()].update_state(b)
+                                _LOGGER.debug(
+                                    "Updating existing Bin entry %s with next pickup %s",
+                                    self._bins[bin.get_bin_id()].get_full_name(),
+                                    self._bins[bin.get_bin_id()].get_next_pickup(),
                                 )
         except Exception as err:
             pass
+            # TODO: Initiate proper exeption
             # raise UpdateFailed(f"Unknown error communicating with API: {err}") from err
 
 
 class Bin:
     """Bin specific class."""
 
-    def __init__(
-        self, waste_type: str, address: str, next_pickup: datetime.date
-    ) -> None:
+    def __init__(self, bin_dict: dict) -> None:
         """Initialize my coordinator."""
-        self._waste_type = waste_type
-        self._address = address
-        self._next_pickup = next_pickup
+        self._bin_dict = bin_dict
+        self._customer_id = bin_dict.get("customer_id")
+        self._plant_number = bin_dict.get("plant_number")
+        self._id = bin_dict.get("id")
 
-    def get_identity(self):
-        """Get unique identity of bin."""
-        return self._address + " - " + self._waste_type
+    def update_state(self, bin_dict: dict) -> None:
+        """Set next pickup date of bin."""
+        self._bin_dict = bin_dict
+
+    def is_valid(self) -> bool:
+        """ "Validate the necessary"""
+        for key in [
+            "customer_id",
+            "plant_number",
+            "address",
+            "id",
+            "type",
+            "pickup_date",
+        ]:
+            if key not in self._bin_dict:
+                _LOGGER.error("Failed to validate Bin with data %s", self._bin_dict)
+                return False
+        return True
+
+    def get_full_address(self) -> str:
+        """Bin address."""
+        return self._bin_dict.get("address") + ", " + self._bin_dict.get("zip_city")
+
+    def get_bin_id(self) -> str:
+        """Get unique identifier for bin."""
+        return self._customer_id + "_" + self._id
+
+    def get_address_id(self) -> str:
+        """Get unique identifier for address."""
+        return self._customer_id + "_" + self._plant_number
+
+    def get_full_name(self) -> str:
+        """Get full name of bin."""
+        return self._bin_dict.get("address") + " - " + self._bin_dict.get("type")
 
     def get_next_pickup(self) -> datetime.date:
         """Get next pickup date of bin."""
-        return self._next_pickup
+        return datetime.strptime(self._bin_dict.get("pickup_date"), "%Y-%m-%d").date()
 
-    def set_next_pickup(self, next_pickup: datetime.date):
-        """Set next pickup date of bin."""
-        self._next_pickup = next_pickup
-
-
-# class AvfallsappEntity(Entity):
-#     """Base class for Avfallsapp entities."""
-
-#     def __init__(
-#         self,
-#         coordinator: AvfallsappCoordinator,
-#     ) -> None:
-#         """Initialize entity."""
-#         # Input configs
-#         self._coordinator = coordinator
-#         self._attr_device_info = coordinator.get_device_info()
+    def get_state_attr(self) -> dict:
+        """Get extra state attributes of bin."""
+        return {
+            "Address": self._bin_dict.get("address"),
+            "City": self._bin_dict.get("zip_city"),
+            "Deviating": self._bin_dict.get("deviating"),
+            "Pickup date": self.get_next_pickup(),
+        }
