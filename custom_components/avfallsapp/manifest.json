@@ -1,0 +1,12 @@
+{
+  "domain": "avfallsapp",
+  "name": "Avfallsapp.se",
+  "codeowners": ["@dala318"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/dala318/avfallsapp",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/dala318/avfallsapp/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
