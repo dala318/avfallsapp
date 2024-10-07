@@ -63,6 +63,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
     """API base class."""
 
     _bins = {}
+    _rss = {}
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize my coordinator."""
@@ -107,6 +108,30 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
         }
         return requests.get(url, headers=headers, timeout=10)
 
+    def get_recycle_centrals_dict(self):
+        """Get recycle stations."""
+        url = (
+            self.config_entry.data.get(CONF_URL)
+            # + "/wp-json/nova/v1/recycle-centrals/opening-hours"
+            + "/wp-json/nova/v1/recycle-centrals/page"
+        )
+        if "http" not in url:
+            url = "https://" + url
+        headers = {
+            "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
+        }
+        return requests.get(url, headers=headers, timeout=10)
+
+    def get_recycle_stations_dict(self):
+        """Get recycle stations."""
+        url = self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/recycle-stations"
+        if "http" not in url:
+            url = "https://" + url
+        headers = {
+            "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
+        }
+        return requests.get(url, headers=headers, timeout=10)
+
     async def _async_update_data(self):
         """Update call function."""
         _LOGGER.debug("Updating service")
@@ -114,15 +139,45 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
             async with asyncio.timeouts.timeout(10):
+                # response = await self._hass.async_add_executor_job(
+                #     self.get_recycle_centrals_dict
+                # )
+                # response.raise_for_status()
+                # recycle_centrals = response.json()
+                # _LOGGER.debug("Recycle centrals: %s", recycle_centrals)
+
+                response = await self._hass.async_add_executor_job(
+                    self.get_recycle_stations_dict
+                )
+                response.raise_for_status()
+                recycle_stations = response.json()
+                _LOGGER.debug("Recycle stations: %s", recycle_stations)
+                for entry in recycle_stations:
+                    rs = RecycleStation(entry)
+                    if rs.is_valid():
+                        if rs.get_rs_id() not in self._rss:
+                            _LOGGER.debug(
+                                "Adding Recycle Station entry for %s",
+                                rs.get_full_name(),
+                                # rs.get_next_pickup().strftime("%Y-%m-%d"),
+                            )
+                            self._rss[rs.get_rs_id()] = rs
+                        else:
+                            self._rss[rs.get_rs_id()].update_state(rs)
+                            _LOGGER.debug(
+                                "Updating existing Recycle Station entry %s,
+                                self._rss[rs.get_rs_id()].get_full_name(),
+                                # self._rss[rs.get_rs_id()].get_next_pickup(),
+                            )
+
                 # Grab active context variables to limit data required to be fetched from API
                 response = await self._hass.async_add_executor_job(
                     self.get_next_pickup_dict
                 )
                 response.raise_for_status()
-                data = response.json()
-                # _LOGGER.debug(response.text)
-                _LOGGER.debug(data)
-                for entry in data:
+                next_pickup = response.json()
+                _LOGGER.debug("Next pickup: %s", next_pickup)
+                for entry in next_pickup:
                     for b in entry.get("bins"):
                         bin = Bin(b)
                         if bin.is_valid():
@@ -150,7 +205,7 @@ class Bin:
     """Bin specific class."""
 
     def __init__(self, bin_dict: dict) -> None:
-        """Initialize my coordinator."""
+        """Initialize class."""
         self._bin_dict = bin_dict
         self._customer_id = bin_dict.get("customer_id")
         self._plant_number = bin_dict.get("plant_number")
@@ -203,3 +258,38 @@ class Bin:
             "Deviating": self._bin_dict.get("deviating"),
             "Pickup date": self.get_next_pickup(),
         }
+
+
+class RecycleStation:
+    """Recycle Station specific class."""
+
+    def __init__(self, rs_dict: dict) -> None:
+        """Initialize class."""
+        self._rs_dict = rs_dict
+        self._id = rs_dict.get("id")
+
+    def update_state(self, rs_dict: dict) -> None:
+        """Set next pickup date of bin."""
+        self._rs_dict = rs_dict
+
+    def is_valid(self) -> bool:
+        """ "Validate the necessary"""
+        for key in [
+            "id",
+            "title",
+            "acf",
+        ]:
+            if key not in self._rs_dict:
+                _LOGGER.error(
+                    "Failed to validate Recycle Station with data %s", self._rs_dict
+                )
+                return False
+        return True
+
+    def get_rs_id(self) -> str:
+        """Get unique identifier for Recycle Station."""
+        return self._rs_dict.get("id")
+
+    def get_full_name(self) -> str:
+        """Get full name of recycle station."""
+        return self._rs_dict.get("title")
