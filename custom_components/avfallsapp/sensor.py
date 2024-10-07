@@ -15,6 +15,8 @@ from . import DOMAIN, AvfallsappCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
+ICON_RECYCLE = "mdi:recycle"
+
 
 async def async_setup_entry(
     hass: HomeAssistant, config_entry: ConfigEntry, async_add_entities

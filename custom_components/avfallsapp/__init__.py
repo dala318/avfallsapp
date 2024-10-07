@@ -2,22 +2,16 @@
 
 from __future__ import annotations
 
-# import datetime as dt
-from datetime import timedelta
-import async_timeout
+from datetime import datetime, timedelta
 import logging
 
+import async_timeout
 import requests
-# from aiohttp import ClientSession
 
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-
-from homeassistant.const import STATE_UNAVAILABLE, STATE_UNKNOWN, Platform
-from homeassistant.const import CONF_API_KEY, CONF_NAME, CONF_URL
+from homeassistant.const import CONF_API_KEY, CONF_NAME, CONF_URL, Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceEntryType, DeviceInfo
-from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 # from homeassistant.helpers.event import async_track_state_change_event
@@ -68,33 +62,6 @@ async def async_reload_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> 
     await async_setup_entry(hass, config_entry)
 
 
-# class PoolLabCoordinator(DataUpdateCoordinator):
-#     def __init__(self, hass, api: PoolLabApi) -> None:
-#         """Initialize my coordinator."""
-#         super().__init__(
-#             hass,
-#             _LOGGER,
-#             name="PoolLab API",
-#             update_interval=timedelta(seconds=30),
-#             update_method=self._async_update_data,
-#         )
-#         self.api = api
-
-#     async def _async_update_data(self):
-#         """Fetch data from API endpoint."""
-#         try:
-#             async with async_timeout.timeout(10):
-#                 return await self.api.request()
-#         # except ApiAuthError as err:
-#         # except GraphQLErroras as err:
-#         except TransportQueryError as err:
-#             # Raising ConfigEntryAuthFailed will cancel future updates
-#             # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-#             raise ConfigEntryAuthFailed from err
-#         except Exception as err:
-#             raise UpdateFailed(f"Unknown error communicating with API: {err}") from err
-
-
 class AvfallsappCoordinator(DataUpdateCoordinator):
     """API base class."""
 
@@ -111,8 +78,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             always_update=True,
         )
         self._hass = hass
-        # self._config = config_entry
-        # await self._async_update_data()
+        self_bins = []
 
     # @property
     # def name(self) -> str:
@@ -139,74 +105,51 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
         }
         return requests.get(url, headers=headers, timeout=10)
 
-    # def _update_data(self):
     async def _async_update_data(self):
         """Update call function."""
         _LOGGER.debug("Updating service")
-
         # https://community.home-assistant.io/t/garbage-sensor-from-api-json-help/155379/4
         # https://soderkoping.avfallsapp.se/wp-json/nova/v1/
         # https://soderkoping.avfallsapp.se/wp-json/nova/v1/recycle-stations?
         # https://soderkoping.avfallsapp.se/wp-json/nova/v1/next-pickup/list?
-
         # https://developers.home-assistant.io/docs/api/rest/
-
-        # url = self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/"
-        url = (
-            self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/next-pickup/list?"
-        )
-        if "http" not in url:
-            url = "https://" + url
-        headers = {
-            "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
-        }
-
-        # websession = async_get_clientsession(self._hass, verify_ssl=False)
-        # api = await get_api_object(
-        #     self.config_entry.data.get(CONF_URL), "", "", websession
-        # )
-        # reponse = api.get("wp-json/nova/v1/")
-
-        # client = ClientSession(
-        #     base_url=self.config_entry.data.get(CONF_URL),
-        #     headers={
-        #         "X-App-Identifier": "00bd24a377fd8d20",
-        #     },
-        # )
-        # response = client.get("wp-json/nova/v1/")
 
         try:
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
             async with async_timeout.timeout(10):
                 # Grab active context variables to limit data required to be fetched from API
-                # Note: using context is not required if there is no need or ability to limit
-                # data retrieved from API.
                 response = await self._hass.async_add_executor_job(self.get_next_pickup)
-                # response = requests.get(url, headers=headers, timeout=10)
                 response.raise_for_status()
                 data = response.json()
                 _LOGGER.debug(response.text)
                 _LOGGER.debug(data)
-                # listening_idx = set(self.async_contexts())
-                # return await self.my_api.fetch_data(listening_idx)
-        # except ApiAuthError as err:
-        #     # Raising ConfigEntryAuthFailed will cancel future updates
-        #     # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-        #     raise ConfigEntryAuthFailed from err
-        # except ApiError as err:
-        #     raise UpdateFailed(f"Error communicating with API: {err}")
+                # TODO: Store data for entities to read
+                entries = []
+                for entry in data:
+                    address = entry.get("address")
+                    # plant_id = entry.get("plant_id")
+                    for bin in entry.get("bins"):
+                        # icon = ICON_RECYCLE
+                        waste_type = bin.get("type")
+                        waste_type_full = f"{address} {waste_type}"
+                        pickup_date = bin.get("pickup_date")
+                        pickup_date = datetime.strptime(pickup_date, "%Y-%m-%d").date()
+                        if waste_type and pickup_date:
+                            _LOGGER.debug(
+                                "Adding entry for %s with next pickup %s",
+                                waste_type_full,
+                                pickup_date.strftime("%Y-%m-%d"),
+                            )
+                            # entries.append(
+                            #     Collection(
+                            #         date=pickup_date, t=waste_type_full, icon=icon
+                            #     )
+                            # )
+
         except Exception as err:
             pass
             # raise UpdateFailed(f"Unknown error communicating with API: {err}") from err
-
-        # response = requests.get(url, headers=headers, timeout=5)
-        # response.raise_for_status()
-        # data = response.json()
-        # _LOGGER.debug(response.text)
-        # _LOGGER.debug(data)
-
-        pass
 
 
 # class AvfallsappEntity(Entity):
@@ -220,8 +163,3 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
 #         # Input configs
 #         self._coordinator = coordinator
 #         self._attr_device_info = coordinator.get_device_info()
-
-#     @property
-#     def should_poll(self):
-#         """No need to poll. Coordinator notifies entity of updates."""
-#         return False
