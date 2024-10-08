@@ -18,7 +18,7 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR]
+PLATFORMS = [Platform.BINARY_SENSOR, Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -193,7 +193,7 @@ class Bin:
         self._bin_dict = bin_dict
 
     def is_valid(self) -> bool:
-        """ "Validate the necessary"""
+        """Validate the necessary keys."""
         for key in [
             "customer_id",
             "plant_number",
@@ -250,7 +250,7 @@ class RecycleStation:
         self._rs_dict = rs_dict
 
     def is_valid(self) -> bool:
-        """ "Validate the necessary"""
+        """Validate the necessary keys."""
         for key in [
             "id",
             "title",
