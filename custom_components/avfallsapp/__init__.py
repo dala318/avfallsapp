@@ -18,7 +18,7 @@ from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = [Platform.SENSOR]
+PLATFORMS = [Platform.SENSOR, Platform.BINARY_SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
@@ -84,8 +84,13 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
 
     @property
     def bins(self) -> dict[str, Bin]:
-        """Name of instance."""
+        """All Bins."""
         return self._bins
+
+    @property
+    def rss(self) -> dict[str, RecycleStation]:
+        """All Recycle Stations."""
+        return self._rss
 
     def get_device_info(self) -> DeviceInfo:
         """Get device info to group entities."""
@@ -96,41 +101,17 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             entry_type=DeviceEntryType.SERVICE,
         )
 
-    def get_next_pickup_dict(self):
-        """Get next pickup date."""
-        url = (
-            self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/next-pickup/list?"
-        )
+    def call_api_get(self, address):
+        """Get data from API address."""
+        url = self.config_entry.data.get(CONF_URL) + address
         if "http" not in url:
             url = "https://" + url
         headers = {
             "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
         }
-        return requests.get(url, headers=headers, timeout=10)
-
-    def get_recycle_centrals_dict(self):
-        """Get recycle stations."""
-        url = (
-            self.config_entry.data.get(CONF_URL)
-            # + "/wp-json/nova/v1/recycle-centrals/opening-hours"
-            + "/wp-json/nova/v1/recycle-centrals/page"
-        )
-        if "http" not in url:
-            url = "https://" + url
-        headers = {
-            "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
-        }
-        return requests.get(url, headers=headers, timeout=10)
-
-    def get_recycle_stations_dict(self):
-        """Get recycle stations."""
-        url = self.config_entry.data.get(CONF_URL) + "/wp-json/nova/v1/recycle-stations"
-        if "http" not in url:
-            url = "https://" + url
-        headers = {
-            "X-App-Identifier": self.config_entry.data.get(CONF_API_KEY),
-        }
-        return requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json()
 
     async def _async_update_data(self):
         """Update call function."""
@@ -139,18 +120,16 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
             async with asyncio.timeouts.timeout(10):
-                # response = await self._hass.async_add_executor_job(
-                #     self.get_recycle_centrals_dict
-                # )
-                # response.raise_for_status()
-                # recycle_centrals = response.json()
-                # _LOGGER.debug("Recycle centrals: %s", recycle_centrals)
-
-                response = await self._hass.async_add_executor_job(
-                    self.get_recycle_stations_dict
+                # Grab active context variables to limit data required to be fetched from API
+                recycle_centrals = await self._hass.async_add_executor_job(
+                    self.call_api_get, "/wp-json/nova/v1/recycle-centrals/opening-hours"
                 )
-                response.raise_for_status()
-                recycle_stations = response.json()
+                _LOGGER.debug("Recycle centrals: %s", recycle_centrals)
+
+                # Grab active context variables to limit data required to be fetched from API
+                recycle_stations = await self._hass.async_add_executor_job(
+                    self.call_api_get, "/wp-json/nova/v1/recycle-stations"
+                )
                 _LOGGER.debug("Recycle stations: %s", recycle_stations)
                 for entry in recycle_stations:
                     rs = RecycleStation(entry)
@@ -163,7 +142,7 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
                             )
                             self._rss[rs.get_rs_id()] = rs
                         else:
-                            self._rss[rs.get_rs_id()].update_state(rs)
+                            self._rss[rs.get_rs_id()].update_state(entry)
                             _LOGGER.debug(
                                 "Updating existing Recycle Station entry %s",
                                 self._rss[rs.get_rs_id()].get_full_name(),
@@ -171,11 +150,9 @@ class AvfallsappCoordinator(DataUpdateCoordinator):
                             )
 
                 # Grab active context variables to limit data required to be fetched from API
-                response = await self._hass.async_add_executor_job(
-                    self.get_next_pickup_dict
+                next_pickup = await self._hass.async_add_executor_job(
+                    self.call_api_get, "/wp-json/nova/v1/next-pickup/list?"
                 )
-                response.raise_for_status()
-                next_pickup = response.json()
                 _LOGGER.debug("Next pickup: %s", next_pickup)
                 for entry in next_pickup:
                     for b in entry.get("bins"):
@@ -293,3 +270,22 @@ class RecycleStation:
     def get_full_name(self) -> str:
         """Get full name of recycle station."""
         return self._rs_dict.get("title")
+
+    def get_opens_at(self) -> datetime.time:
+        """Get the opens time for station."""
+        # return datetime.strptime(self._rs_dict.get("pickup_date"), "%Y-%m-%d").date()
+        return datetime.strptime(self._rs_dict.get("pickup_date"), "%Y-%m-%d").time()
+
+    def get_closes_at(self) -> datetime.time:
+        """Get the opens time for station."""
+        # return datetime.strptime(self._rs_dict.get("pickup_date"), "%Y-%m-%d").date()
+        return datetime.strptime(self._rs_dict.get("pickup_date"), "%Y-%m-%d").time()
+
+    def get_state_attr(self) -> dict:
+        """Get extra state attributes of bin."""
+        return {
+            # "Address": self._bin_dict.get("address"),
+            # "City": self._bin_dict.get("zip_city"),
+            # "Deviating": self._bin_dict.get("deviating"),
+            # "Pickup date": self.get_next_pickup(),
+        }
